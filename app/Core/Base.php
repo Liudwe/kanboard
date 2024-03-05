@@ -131,6 +131,7 @@ use Pimple\Container;
  * @property \Kanboard\Model\SwimlaneModel                           $swimlaneModel
  * @property \Kanboard\Model\TagDuplicationModel                     $tagDuplicationModel
  * @property \Kanboard\Model\TagModel                                $tagModel
+ * @property \Kanboard\Model\PriorityModel                           $priorityModel
  * @property \Kanboard\Model\TaskModel                               $taskModel
  * @property \Kanboard\Model\TaskAnalyticModel                       $taskAnalyticModel
  * @property \Kanboard\Model\TaskCreationModel                       $taskCreationModel

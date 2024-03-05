@@ -119,6 +119,8 @@ class RouteProvider implements ServiceProviderInterface
             $container['route']->addRoute('task/:task_id/time-tracking', 'TaskViewController', 'timetracking');
             $container['route']->addRoute('task/:task_id/position/show', 'TaskMovePositionController', 'show');
             $container['route']->addRoute('task/:task_id/position/save', 'TaskMovePositionController', 'save');
+            $container['route']->addRoute('task/:task_id/position/show', 'TaskMovePositionInDashboardController', 'showInDashboard');
+            $container['route']->addRoute('task/:task_id/position/save', 'TaskMovePositionInDashboardController', 'saveInDashboard');
             $container['route']->addRoute('task/:task_id/edit', 'TaskModificationController', 'edit');
             $container['route']->addRoute('task/:task_id/update', 'TaskModificationController', 'update');
             $container['route']->addRoute('task/:task_id/assign-to-me/:csrf_token', 'TaskModificationController', 'assignToMe');

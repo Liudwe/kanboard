@@ -8,8 +8,19 @@ use Kanboard\Core\Security\Token;
 use Kanboard\Core\Security\Role;
 use PDO;
 
-const VERSION = 127;
+const VERSION = 128;
 
+
+function version_128(PDO $pdo)
+{
+    $pdo->exec('
+        CREATE TABLE priority (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            priority_number INTEGER NOT NULL
+        )
+    ');
+}
 
 function version_127(PDO $pdo)
 {

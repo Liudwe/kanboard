@@ -18,6 +18,11 @@
         <li <?= $this->app->checkMenuSelection('TagController', 'index') ?>>
             <?= $this->url->link(t('Tags management'), 'TagController', 'index') ?>
         </li>
+        <!--  -->
+        <li <?= $this->app->checkMenuSelection('PriorityNameController', 'index') ?>>
+            <?= $this->url->link(t('Priorities name management'), 'PriorityNameController', 'index') ?>
+        </li>
+        <!--  -->
         <li <?= $this->app->checkMenuSelection('LinkController') ?>>
             <?= $this->url->link(t('Link labels'), 'LinkController', 'show') ?>
         </li>

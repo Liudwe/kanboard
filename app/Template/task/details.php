@@ -18,7 +18,7 @@
                         </span>
                     </li>
                     <li>
-                        <strong><?= t('Priority:') ?></strong> <span><?= $task['priority'] ?></span>
+                        <strong><?= t('Priority:') ?></strong> <span><?= $this->task->renderPriority($task['priority']) ?></span>
                     </li>
                     <?php if (! empty($task['reference'])): ?>
                         <li>

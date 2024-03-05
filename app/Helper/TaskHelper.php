@@ -237,12 +237,34 @@ class TaskHelper extends Base
 
     public function renderPriority($priority)
     {
-        $html = '<span class="task-priority" title="'.t('Task priority').'">';
-        $html .= '<span class="ui-helper-hidden-accessible">'.t('Task priority').' </span>';
-        $html .= $this->helper->text->e($priority >= 0 ? 'P'.$priority : '-P'.abs($priority));
-        $html .= '</span>';
+        $priorityData = $this->priorityModel->getByPriorityNumber($priority);
 
-        return $html;
+        // Check if priority data is found
+        if ($priorityData !== null) {
+            // Extract necessary information
+            $name = $priorityData['name'];
+
+            $html = '<span class="task-priority" title="'.t('Task priority').'">';
+            $html .= '<span class="ui-helper-hidden-accessible">'.t('Task priority').' </span>';
+            $html .= $this->helper->text->e('P-' . $priority . ' ' . $name);
+            $html .= '</span>';
+            return $html;
+        } else {
+            
+            $html = '<span class="task-priority" title="'.t('Task priority').'">';
+            $html .= '<span class="ui-helper-hidden-accessible">'.t('Task priority').' </span>';
+            $html .= $this->helper->text->e('P-' . $priority);
+            $html .= '</span>';
+            return $html;
+
+        }
+
+        // $html = '<span class="task-priority" title="'.t('Task priority').'">';
+        // $html .= '<span class="ui-helper-hidden-accessible">'.t('Task priority').' </span>';
+        // $html .= $this->helper->text->e('P-' . $priority . ' ');
+        // $html .= '</span>';
+    
+        // return $html;
     }
 
     public function renderReference(array $task)

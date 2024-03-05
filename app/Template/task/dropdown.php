@@ -60,6 +60,12 @@
         </li>
         <?= $this->hook->render('template:task:dropdown:after-send-mail', array('task' => $task)) ?>
 
+        <?php if ($task['is_active'] == 1 && $this->projectRole->isSortableColumn($task['project_id'], $task['column_id'])): ?>
+            <li>
+                <?= $this->modal->small('arrows', t('Move position'), 'TaskMovePositionInDashboardController', 'showInDashboard', array('task_id' => $task['id'])) ?>
+            </li>
+        <?php endif ?>
+
         <?php if ($this->projectRole->canRemoveTask($task)): ?>
             <li>
                 <?= $this->modal->confirm('trash-o', t('Remove'), 'TaskSuppressionController', 'confirm', array('task_id' => $task['id'])) ?>

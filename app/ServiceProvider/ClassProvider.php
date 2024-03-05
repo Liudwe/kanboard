@@ -73,6 +73,7 @@ class ClassProvider implements ServiceProviderInterface
             'SwimlaneModel',
             'TagDuplicationModel',
             'TagModel',
+            'PriorityModel',
             'TaskModel',
             'TaskAnalyticModel',
             'TaskCreationModel',
