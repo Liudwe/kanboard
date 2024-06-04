@@ -1,5 +1,8 @@
 <div class="table-list-details">
-    <?= $this->text->e($task['project_name']) ?> &gt;
+<a href="<?= $this->url->href('BoardViewController', 'show', array('project_id' => $task['project_id'])) ?>">
+        <?= $this->text->e($task['project_name']) ?>
+    </a>
+    &gt;
     <?= $this->text->e($task['swimlane_name']) ?> &gt;
     <?= $this->text->e($task['column_name']) ?>
 
