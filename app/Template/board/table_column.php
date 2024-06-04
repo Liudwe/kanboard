@@ -82,6 +82,18 @@
                                     <li>
                                         <?= $this->url->icon('sort-numeric-desc', t('Reorder this column by due date (DESC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'due-date', 'direction' => 'desc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
                                     </li>
+                                    <li>
+                                        <?= $this->url->icon('sort-numeric-asc', t('Reorder this column by closed date (ASC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'closed-date', 'direction' => 'asc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                    </li>
+                                    <li>
+                                        <?= $this->url->icon('sort-numeric-desc', t('Reorder this column by closed date (DESC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'closed-date', 'direction' => 'desc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                    </li>
+                                    <li>
+                                        <?= $this->url->icon('sort-numeric-asc', t('Reorder this column by moved date (ASC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'moved-date', 'direction' => 'asc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                    </li>
+                                    <li>
+                                        <?= $this->url->icon('sort-numeric-desc', t('Reorder this column by moved date (DESC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'moved-date', 'direction' => 'desc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                    </li>
                                 </ul>
                             </span>
                         <?php endif ?>
