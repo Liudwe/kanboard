@@ -36,7 +36,8 @@ class TaskColumnFilter extends BaseFilter implements FilterInterface
         if (is_int($this->value) || ctype_digit((string) $this->value)) {
             $this->query->eq(TaskModel::TABLE.'.column_id', $this->value);
         } else {
-            $this->query->eq(ColumnModel::TABLE.'.title', $this->value);
+            $trimmedValue = trim($this->value);
+            $this->query->ilike(ColumnModel::TABLE.'.title', '%'.$trimmedValue.'%');
         }
 
         return $this;

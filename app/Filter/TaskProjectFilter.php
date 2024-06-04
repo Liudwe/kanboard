@@ -38,7 +38,8 @@ class TaskProjectFilter extends BaseFilter implements FilterInterface
         if (is_int($this->value) || ctype_digit((string) $this->value) && $this->value < 2147483647) {
             $this->query->eq(TaskModel::TABLE.'.project_id', $this->value);
         } else {
-            $this->query->ilike(ProjectModel::TABLE.'.name', $this->value);
+            $trimmedValue = trim($this->value);
+            $this->query->ilike(ProjectModel::TABLE.'.name', '%'.$trimmedValue.'%');
         }
 
         return $this;
