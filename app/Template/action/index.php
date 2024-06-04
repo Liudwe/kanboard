@@ -7,6 +7,10 @@
         <li>
             <?= $this->modal->medium('copy', t('Import from another project'), 'ProjectActionDuplicationController', 'show', array('project_id' => $project['id'])) ?>
         </li>
+        <li>
+            <?= $this->modal->confirm('trash-o', t('Delete all the actions from this project'), 'ActionController', 'confirmAll', array('project_id' => $project['id'])) ?>
+        </li>
+        
     </ul>
 </div>
 

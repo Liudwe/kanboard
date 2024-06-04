@@ -127,6 +127,21 @@ class ActionModel extends Base
     }
 
     /**
+     * Remove all actions from a project
+     *
+     * @access public
+     * @param  integer $projectId Project id
+     * @return boolean
+     */
+    public function removeAll($projectId)
+    {
+        return $this->db
+            ->table(self::TABLE)
+            ->eq('project_id', $projectId)
+            ->remove();
+    }
+
+    /**
      * Create an action
      *
      * @access public
