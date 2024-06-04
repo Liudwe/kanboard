@@ -76,4 +76,39 @@ class ActionController extends BaseController
 
         $this->response->redirect($this->helper->url->to('ActionController', 'index', array('project_id' => $project['id'])));
     }
+
+
+    /**
+     * Confirmation dialog before removing all actions from a project
+     *
+     * @access public
+     */
+    public function confirmAll()
+    {
+        $project = $this->getProject();
+
+        $this->response->html($this->helper->layout->project('action/removeAll', array(
+            'project' => $project,
+            'title' => t('Remove all actions from this project')
+        )));
+    }
+
+    /**
+     * Remove all actions from a project
+     *
+     * @access public
+     */
+    public function removeAll()
+    {
+        $this->checkCSRFParam();
+        $project = $this->getProject();
+
+        if ($this->actionModel->removeAll($project['id'])) {
+            $this->flash->success(t('All actions removed successfully.'));
+        } else {
+            $this->flash->failure(t('Unable to remove actions.'));
+        }
+
+        $this->response->redirect($this->helper->url->to('ActionController', 'index', array('project_id' => $project['id'])));
+    }
 }
