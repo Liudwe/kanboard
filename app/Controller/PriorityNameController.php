@@ -70,19 +70,20 @@ class PriorityNameController extends BaseController
         $priority_id = $this->request->getIntegerParam('priority_id');
         $priority = $this->priorityModel->getById($priority_id);
         $values = $this->request->getValues();
-        list($valid, $errors) = $this->tagValidator->validateModification($values);
-
-        if ($valid) {
-            if ($this->priorityModel->update($values['id'], $values['name'], $values['priority_number'])) {
-                $this->flash->success(t('Priority updated successfully.'));
-            } else {
-                $this->flash->failure(t('Unable to update this priority.'));
-            }
-
-            $this->response->redirect($this->helper->url->to('PriorityNameController', 'index'));
-        } else {
-            $this->edit($values, $errors);
+    
+        // Basic validation
+        if (empty($values['name']) || !ctype_digit($values['priority_number'])) {
+            $this->flash->failure(t('Invalid data provided.'));
+            $this->response->redirect($this->helper->url->to('PriorityNameController', 'edit', array('priority_id' => $priority_id)));
+            return;
         }
+        if ($this->priorityModel->update($priority_id, $values['name'], $values['priority_number'])) {
+            $this->flash->success(t('Priority updated successfully.'));
+        } else {
+            $this->flash->failure(t('Unable to update this priority.'));
+        }
+    
+        $this->response->redirect($this->helper->url->to('PriorityNameController', 'index'));
     }
 
     public function confirm()

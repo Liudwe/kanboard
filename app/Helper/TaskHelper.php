@@ -172,12 +172,24 @@ class TaskHelper extends Base
     public function renderPriorityField(array $project, array $values)
     {
         $range = range($project['priority_start'], $project['priority_end']);
-        $options = array_combine($range, $range);
-        $values += array('priority' => $project['priority_default']);
-
+    
+        // Initialize options array
+        $options = [];
+    
+        // Fetch priority names for each priority number
+        foreach ($range as $priority) {
+            $priorityData = $this->priorityModel->getByPriorityNumber($priority);
+            $name = $priorityData ? $priorityData['name'] : '';
+    
+            // Add priority name to options array
+            $options[$priority] = $priority . ' - ' . $name;
+        }
+    
+        $values += ['priority' => $project['priority_default']];
+    
         $html = $this->helper->form->label(t('Priority'), 'priority');
-        $html .= $this->helper->form->select('priority', $options, $values, array(), array('tabindex="9"'));
-
+        $html .= $this->helper->form->select('priority', $options, $values, [], ['tabindex="9"']);
+    
         return $html;
     }
 
