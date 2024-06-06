@@ -45,11 +45,12 @@ class TaskListController extends BaseController
         list($order, $direction) = $this->userSession->getListOrder($project['id']);
         $direction = $this->request->getStringParam('direction', $direction);
         $order = $this->request->getStringParam('order', $order);
+        $limit = $this->userSession->getDashboardMaxItemsPerPage();
         $this->userSession->setListOrder($project['id'], $order, $direction);
 
         $paginator = $this->paginator
             ->setUrl('TaskListController', 'show', array('project_id' => $project['id'], 'csrf_token' => $this->token->getReusableCSRFToken()))
-            ->setMax(30)
+            ->setMax($limit)
             ->setOrder($order)
             ->setDirection($direction)
             ->setFormatter($formatter)

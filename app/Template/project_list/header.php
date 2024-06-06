@@ -7,6 +7,7 @@
         <?php endif ?>
     </div>
     <div class="table-list-header-menu">
+        <?= $this->render('task_list/item_amount_list', array('paginator' => $paginator)) ?>
         <?= $this->render('project_list/sort_menu', array('paginator' => $paginator)) ?>
     </div>
 </div>

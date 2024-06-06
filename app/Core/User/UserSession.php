@@ -297,4 +297,30 @@ class UserSession extends Base
     {
         session_set('listOrder:'.$projectID, [$listOrder, $listDirection]);
     }
+
+
+    /**
+     * Get the selected max items per page for the dashboard
+     *
+     * @access public
+     * @param  integer $userId
+     * @param  integer $default
+     * @return integer
+     */
+    public function getDashboardMaxItemsPerPage()
+    {
+        return session_get('items_per_page');
+    }
+
+    /**
+     * Set the selected max items per page for the dashboard
+     *
+     * @access public
+     * @param  integer $userId
+     * @param  integer $value
+     */
+    public function setDashboardMaxItemsPerPage($value)
+    {
+        session_set('items_per_page', $value);
+    }
 }

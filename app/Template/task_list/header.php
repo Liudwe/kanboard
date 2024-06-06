@@ -36,6 +36,7 @@
             <?php endif ?>
         <?php endif ?>
 
+        <?= $this->render('task_list/item_amount_list', array('paginator' => $paginator)) ?>
         <?= $this->render('task_list/sort_menu', array('paginator' => $paginator)) ?>
     </div>
 </div>

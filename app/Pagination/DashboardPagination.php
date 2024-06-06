@@ -19,9 +19,10 @@ class DashboardPagination extends Base
      *
      * @access public
      * @param  integer $userId
+     * @param  integer $limit
      * @return array
      */
-    public function getOverview($userId)
+    public function getOverview($userId, $limit)
     {
         $paginators = array();
         $projects = $this->projectUserRoleModel->getActiveProjectsByUser($userId);
@@ -32,8 +33,8 @@ class DashboardPagination extends Base
             $this->hook->reference('pagination:dashboard:task:query', $query);
 
             $paginator = $this->paginator
-                ->setUrl('DashboardController', 'show', array('user_id' => $userId, 'pagination' => 'tasks-'.$projectId), 'project-tasks-'.$projectId)
-                ->setMax(15)
+                ->setUrl('DashboardController', 'show', array('user_id' => $userId, 'pagination' => 'tasks-'.$projectId, 'max' => $limit), 'project-tasks-'.$projectId)
+                ->setMax($limit)
                 ->setOrder(TaskModel::TABLE.'.priority')
                 ->setDirection('DESC')
                 ->setFormatter($this->taskListSubtaskAssigneeFormatter->withUserId($userId))
