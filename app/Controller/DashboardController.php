@@ -18,12 +18,15 @@ class DashboardController extends BaseController
     public function show()
     {
         $user = $this->getUser();
+        $limit = $this->userSession->getDashboardMaxItemsPerPage();
+
 
         $this->response->html($this->helper->layout->dashboard('dashboard/overview', array(
             'title'              => t('Dashboard for %s', $this->helper->user->getFullname($user)),
             'user'               => $user,
-            'overview_paginator' => $this->dashboardPagination->getOverview($user['id']),
-            'project_paginator'  => $this->projectPagination->getDashboardPaginator($user['id'], 'show', 10),
+            'overview_paginator' => $this->dashboardPagination->getOverview($user['id'], $limit),
+            'project_paginator'  => $this->projectPagination->getDashboardPaginator($user['id'], 'show', $limit),
+            'custom_global_filters' => $this->customGlobalFilterModel->getAll($user['id']),
         )));
     }
 
@@ -35,10 +38,10 @@ class DashboardController extends BaseController
     public function tasks()
     {
         $user = $this->getUser();
-
+        $limit = $this->userSession->getDashboardMaxItemsPerPage();
         $this->response->html($this->helper->layout->dashboard('dashboard/tasks', array(
             'title' => t('Tasks overview for %s', $this->helper->user->getFullname($user)),
-            'paginator' => $this->taskPagination->getDashboardPaginator($user['id'], 'tasks', 50),
+            'paginator' => $this->taskPagination->getDashboardPaginator($user['id'], 'tasks', $limit),
             'user' => $user,
         )));
     }
@@ -71,7 +74,7 @@ class DashboardController extends BaseController
 
         $this->response->html($this->helper->layout->dashboard('dashboard/projects', array(
             'title' => t('Projects overview for %s', $this->helper->user->getFullname($user)),
-            'paginator' => $this->projectPagination->getDashboardPaginator($user['id'], 'projects', 25),
+            'paginator' => $this->projectPagination->getDashboardPaginator($user['id'], 'projects', $limit),
             'user' => $user,
         )));
     }

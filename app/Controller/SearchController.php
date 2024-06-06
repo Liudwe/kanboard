@@ -18,10 +18,12 @@ class SearchController extends BaseController
         $projects = $this->projectUserRoleModel->getActiveProjectsByUser($this->userSession->getId());
         $search = urldecode($this->request->getStringParam('search'));
         $nb_tasks = 0;
+        $limit = $this->userSession->getDashboardMaxItemsPerPage();
+        $user = $this->getUser();
 
         $paginator = $this->paginator
                 ->setUrl('SearchController', 'index', array('search' => $search))
-                ->setMax(30)
+                ->setMax($limit)
                 ->setOrder(TaskModel::TABLE.'.id')
                 ->setDirection('DESC');
 
@@ -43,9 +45,11 @@ class SearchController extends BaseController
                 'search' => $search,
                 'controller' => 'SearchController',
                 'action' => 'index',
+                'custom_global_filters' => $this->customGlobalFilterModel->getAll($user['id']),
             ),
             'paginator' => $paginator,
-            'title' => t('Search tasks').($nb_tasks > 0 ? ' ('.$nb_tasks.')' : '')
+            'title' => t('Search tasks').($nb_tasks > 0 ? ' ('.$nb_tasks.')' : ''),
+            'custom_global_filters' => $this->customGlobalFilterModel->getAll($user['id']),
         )));
     }
 
