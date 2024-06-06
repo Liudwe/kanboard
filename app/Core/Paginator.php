@@ -170,11 +170,17 @@ class Paginator
     {
         if ($this->query !== null) {
 
-            $this->query
+             $this->query
                 ->offset($this->offset)
                 ->limit($this->limit);
 
-            if (preg_match('/^[a-zA-Z0-9._]+$/', $this->order)) {
+            if (is_array($this->order)) {
+                foreach ($this->order as $column) {
+                    if (preg_match('/^[a-zA-Z0-9._]+$/', $column)) {
+                        $this->query->orderBy($column, $this->direction);
+                    }
+                }
+            } elseif (preg_match('/^[a-zA-Z0-9._]+$/', $this->order)) {
                 $this->query->orderBy($this->order, $this->direction);
             } else {
                 $this->order = '';
@@ -517,10 +523,10 @@ class Paginator
     /**
      * Column sorting
      *
-     * @param  string   $label         Column title
-     * @param  string   $column        SQL column name
-     * @return string
-     */
+        * @param  string   $label         Column title
+        * @param  string   $column        SQL column name
+        * @return string
+    */
     public function order($label, $column)
     {
         $prefix = '';
@@ -540,4 +546,37 @@ class Paginator
             'js-modal-replace'
         );
     }
+
+/**
+ * Sort by Priority and Due Date
+ *
+ * @return string
+ */
+public function orderByPriorityAndDueDate()
+{
+    $priorityColumn = \Kanboard\Model\TaskModel::TABLE . '.priority';
+    $dueDateColumn = \Kanboard\Model\TaskModel::TABLE . '.date_due';
+
+    $priorityPrefix = '';
+    $dueDatePrefix = '';
+    $direction = 'ASC';
+
+    // Ensure $this->order is always treated as an array
+    $orderBy = is_array($this->order) ? reset($this->order) : $this->order;
+
+    if ($orderBy === $priorityColumn || $orderBy === $dueDateColumn) {
+        $priorityPrefix = $orderBy === $priorityColumn ? '&#9660; ' : '';
+        $dueDatePrefix = $orderBy === $dueDateColumn ? '&#9660; ' : '';
+        $direction = $this->direction === 'DESC' ? 'ASC' : 'DESC';
+    }
+
+    return $priorityPrefix . $this->container['helper']->url->link(
+        t('Priority & Due Date'),
+        $this->controller,
+        $this->action,
+        $this->getUrlParams($this->page, [$priorityColumn, $dueDateColumn], $direction),
+        false,
+        'js-modal-replace'
+    );
+}
 }
