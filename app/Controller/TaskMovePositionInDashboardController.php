@@ -17,7 +17,7 @@ class TaskMovePositionInDashboardController extends BaseController
     {
         $task = $this->getTask();
 
-        $this->response->html($this->template->render('task_move_position/show2', array(
+        $this->response->html($this->template->render('task_move_position/dropdown_show', array(
             'task' => $task,
             'board' => $this->boardFormatter
                 ->withProjectId($task['project_id'])
@@ -34,11 +34,11 @@ class TaskMovePositionInDashboardController extends BaseController
         $this->checkReusableGETCSRFParam();
         $task = $this->getTask();
         $values = $this->request->getJson();
-
+    
         if (! $this->helper->projectRole->canMoveTask($task['project_id'], $task['column_id'], $values['column_id'])) {
             throw new AccessForbiddenException(e('You are not allowed to move this task.'));
         }
-
+    
         $this->taskPositionModel->movePosition(
             $task['project_id'],
             $task['id'],
@@ -47,6 +47,6 @@ class TaskMovePositionInDashboardController extends BaseController
             $values['swimlane_id']
         );
 
-        $this->response->redirect($this->helper->url->to('DashboardController', 'show'));
+        $this->response->redirect($this->helper->url->to('TaskViewController', 'show', array('task_id' => $task['id'])), true);
     }
 }
