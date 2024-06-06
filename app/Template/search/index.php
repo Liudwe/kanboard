@@ -16,7 +16,30 @@
             <div class="input-addon-item">
                 <?= $this->render('app/filters_helper') ?>
             </div>
+
+            <div class="input-addon-item">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-menu dropdown-menu-link-icon" title="<?= t('Custom filters') ?>" aria-label="<?= t('Custom filters') ?>"><i class="fa fa-bookmark fa-fw"></i><i class="fa fa-caret-down"></i></a>
+                    <ul>
+                        <li>
+                            <?= $this->modal->medium('filter', t('Add custom filters'), 'CustomGlobalFilterController', 'create') ?>
+                        </li>
+                        <?php if (isset($custom_global_filters) && ! empty($custom_global_filters)): ?>
+                        <?php foreach ($custom_global_filters as $filter): ?>
+                            <li>
+                                <a href="#" class="filter-helper" data-filter='<?= $this->text->e($filter['filter']) ?>'><?= $this->text->e($filter['name']) ?></a>
+                                <span class="filter-buttons">
+                                    <?= $this->modal->medium('edit', t('Edit'), 'CustomGlobalFilterController', 'edit', array('filter_id' => $filter['id'])) ?>
+                                    <?= $this->modal->confirm('trash-o', t('Remove'), 'CustomGlobalFilterController', 'confirm', array('filter_id' => $filter['id'])) ?>
+                                </span>
+                            </li>
+                        <?php endforeach ?>
+                        <?php endif ?>
+                    </ul>
+                </div>
+            </div>
         </div>
+        
     </form>
 </div>
 

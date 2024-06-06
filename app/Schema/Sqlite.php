@@ -8,8 +8,21 @@ use Kanboard\Core\Security\Token;
 use Kanboard\Core\Security\Role;
 use PDO;
 
-const VERSION = 128;
+const VERSION = 129;
 
+function version_129(PDO $pdo)
+{
+    $pdo->exec("
+        CREATE TABLE custom_filters_global (
+            id INTEGER PRIMARY KEY,
+            filter TEXT NOT NULL,
+            user_id INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            is_shared INTEGER DEFAULT 0,
+            append INTEGER DEFAULT 0
+        )
+    ");
+}
 
 function version_128(PDO $pdo)
 {
