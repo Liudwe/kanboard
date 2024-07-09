@@ -133,6 +133,25 @@ class TaskHelper extends Base
         return $html;
     }
 
+    public function renderLeaderField(array $users, array $values, array $errors = array(), array $attributes = array())
+    {
+        if (isset($values['project_id']) && ! $this->helper->projectRole->canChangeAssignee($values)) {
+            return '';
+        }
+
+        $attributes = array_merge(array('tabindex="5"'), $attributes);
+
+        $html = $this->helper->form->label(t('Leader'), 'leader_id');
+        $html .= $this->helper->form->select('leader_id', $users, $values, $errors, $attributes);
+        $html .= '&nbsp;';
+        $html .= '<small>';
+        $html .= '<a href="#" class="assign-me" data-target-id="form-leader_id" data-current-id="'.$this->userSession->getId().'" title="'.t('Assign to me').'" aria-label="'.t('Assign to me').'">'.t('Me').'</a>';
+        $html .= '</small>';
+
+        return $html;
+    }
+
+
     public function renderCategoryField(array $categories, array $values, array $errors = array(), array $attributes = array(), $allow_one_item = false)
     {
         $attributes = array_merge(array('tabindex="6"'), $attributes);

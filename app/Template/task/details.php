@@ -89,6 +89,12 @@
                             - <span><?= $this->url->link(t('Assign to me'), 'TaskModificationController', 'assignToMe', ['task_id' => $task['id'], 'csrf_token' => $this->app->getToken()->getReusableCSRFToken()]) ?></span>
                         <?php endif ?>
                     </li>
+                    <?php if ($task['leader_username']): ?>
+                        <li>
+                            <strong><?= t('Leader:') ?></strong>
+                            <span><?= $this->text->e($task['leader_name'] ?: $task['leader_username']) ?></span>
+                        </li>
+                    <?php endif ?>
                     <?php if ($task['creator_username']): ?>
                         <li>
                             <strong><?= t('Creator:') ?></strong>

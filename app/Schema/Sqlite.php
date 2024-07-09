@@ -8,7 +8,12 @@ use Kanboard\Core\Security\Token;
 use Kanboard\Core\Security\Role;
 use PDO;
 
-const VERSION = 129;
+const VERSION = 133;
+
+function version_133(PDO $pdo)
+{
+    $pdo->exec('ALTER TABLE tasks ADD COLUMN leader_id INTEGER DEFAULT NULL');
+}
 
 function version_129(PDO $pdo)
 {

@@ -99,4 +99,11 @@
     <?php endif ?>
 
     <?= $this->task->renderPriority($task['priority']) ?>
+
+    <?php if ($task['leader_username']): ?>
+        <li>
+            <strong><?= t('Leader:') ?></strong>
+            <span><?= $this->text->e($task['leader_name'] ?: $task['leader_username']) ?></span>
+        </li>
+    <?php endif ?>
 </div>

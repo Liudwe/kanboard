@@ -120,6 +120,8 @@ class TaskFinderModel extends Base
                 TaskModel::TABLE.'.reference',
                 UserModel::TABLE.'.username AS assignee_username',
                 UserModel::TABLE.'.name AS assignee_name',
+                'ul.username AS leader_username',
+                'ul.name AS leader_name',
                 UserModel::TABLE.'.email AS assignee_email',
                 UserModel::TABLE.'.avatar_path AS assignee_avatar_path',
                 CategoryModel::TABLE.'.name AS category_name',
@@ -132,6 +134,7 @@ class TaskFinderModel extends Base
             )
             ->join(UserModel::TABLE, 'id', 'owner_id', TaskModel::TABLE)
             ->left(UserModel::TABLE, 'uc', 'id', TaskModel::TABLE, 'creator_id')
+            ->left(UserModel::TABLE, 'ul', 'id', TaskModel::TABLE, 'leader_id')
             ->join(CategoryModel::TABLE, 'id', 'category_id', TaskModel::TABLE)
             ->join(ColumnModel::TABLE, 'id', 'column_id', TaskModel::TABLE)
             ->join(SwimlaneModel::TABLE, 'id', 'swimlane_id', TaskModel::TABLE)
@@ -294,11 +297,14 @@ class TaskFinderModel extends Base
                 UserModel::TABLE.'.name AS assignee_name',
                 'uc.username AS creator_username',
                 'uc.name AS creator_name',
+                'ul.username AS leader_username',
+                'ul.name AS leader_name',
                 CategoryModel::TABLE.'.description AS category_description',
                 ColumnModel::TABLE.'.position AS column_position'
             )
             ->join(UserModel::TABLE, 'id', 'owner_id', TaskModel::TABLE)
             ->left(UserModel::TABLE, 'uc', 'id', TaskModel::TABLE, 'creator_id')
+            ->left(UserModel::TABLE, 'ul', 'id', TaskModel::TABLE, 'leader_id')
             ->join(CategoryModel::TABLE, 'id', 'category_id', TaskModel::TABLE)
             ->join(ColumnModel::TABLE, 'id', 'column_id', TaskModel::TABLE)
             ->join(SwimlaneModel::TABLE, 'id', 'swimlane_id', TaskModel::TABLE)
