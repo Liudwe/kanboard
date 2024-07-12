@@ -19,6 +19,7 @@ use Kanboard\Filter\TaskCompletionDateRangeFilter;
 use Kanboard\Filter\TaskCreationDateFilter;
 use Kanboard\Filter\TaskCreationDateRangeFilter;
 use Kanboard\Filter\TaskCreatorFilter;
+use Kanboard\Filter\TaskLeaderFilter;
 use Kanboard\Filter\TaskDescriptionFilter;
 use Kanboard\Filter\TaskDueDateFilter;
 use Kanboard\Filter\TaskStartDateFilter;
@@ -158,6 +159,9 @@ class FilterProvider implements ServiceProviderInterface
                     ->setDateParser($c['dateParser'])
                 )
                 ->withFilter(TaskCreatorFilter::getInstance()
+                    ->setCurrentUserId($c['userSession']->getId())
+                )
+                ->withFilter(TaskLeaderFilter::getInstance()
                     ->setCurrentUserId($c['userSession']->getId())
                 )
                 ->withFilter(new TaskDescriptionFilter())
