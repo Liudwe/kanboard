@@ -15,5 +15,9 @@
 
     <?= $this->form->checkbox('append', t('Append filter (instead of replacement)'), 1, $values['append'] == 1) ?>
 
+    <?= $this->form->renderFilterUserField() ?>
+
+    <?= $this->form->renderFilterGroupField() ?>
+
     <?= $this->modal->submitButtons() ?>
 </form>

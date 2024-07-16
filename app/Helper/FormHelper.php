@@ -479,4 +479,50 @@ class FormHelper extends Base
 
         return isset($values[$name]) ? 'value="'.$this->helper->text->e($values[$name]).'"' : '';
     }
+
+    public function renderFilterUserField(array $selectedUsers = [])
+    {
+        $currentUserId = $this->userSession->getId();
+        $options = $this->userModel->getAssignableUsers($currentUserId);
+    
+        $html = $this->helper->form->label(t('Visible to Users'), 'users[]');
+        $html .= '<input type="hidden" name="users[]" value="">';
+        $html .= '<select name="users[]" id="form-users" class="tag-autocomplete" multiple tabindex="3">';
+    
+        foreach ($options as $id => $username) {
+            $html .= sprintf(
+                '<option value="%s" %s>%s</option>',
+                $this->helper->text->e($id),  // Ensure user ID is properly escaped
+                in_array($id, $selectedUsers) ? 'selected="selected"' : '',
+                $this->helper->text->e($username)  // Ensure username is properly escaped
+            );
+        }
+    
+        $html .= '</select>';
+    
+        return $html;
+    }    
+
+    public function renderFilterGroupField(array $selectedGroups = [])
+    {
+        $options = $this->groupModel->getAssignableGroups();
+    
+        $html = $this->helper->form->label(t('Visible to Groups'), 'groups[]');
+        $html .= '<input type="hidden" name="groups[]" value="">';
+        $html .= '<select name="groups[]" id="form-groups" class="tag-autocomplete" multiple tabindex="3">';
+    
+        foreach ($options as $id => $groupName) {
+            $html .= sprintf(
+                '<option value="%s" %s>%s</option>',
+                $this->helper->text->e($id),  // Ensure user ID is properly escaped
+                in_array($id, $selectedGroups) ? 'selected="selected"' : '',
+                $this->helper->text->e($groupName)  // Ensure username is properly escaped
+            );
+        }
+    
+        $html .= '</select>';
+    
+        return $html;
+    }    
+    
 }

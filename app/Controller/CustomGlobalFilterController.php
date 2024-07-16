@@ -30,28 +30,66 @@ class CustomGlobalFilterController extends BaseController
         )));
     }
 
-    /**
-     * Save a new custom filter
-     *
-     * @access public
-     */
+
     public function save()
     {
         $values = $this->request->getValues();
+
         $values['user_id'] = $this->userSession->getId();
+        $currentUserId = $this->userSession->getId();
+    
+        // Extract selected user IDs from the $values array
+        $selectedUsernamesId = isset($values['users']) ? $values['users'] : [];
+        if (isset($values['users'])) {
+            unset($values['users']);
+        }
 
+        // Extract selected groups IDs from the $values array
+        $selectedGroupsId = isset($values['groups']) ? $values['groups'] : [];
+        if (isset($values['groups'])) {
+            unset($values['groups']);
+        }
+    
+
+        $selectedGroupsId = array_filter($selectedGroupsId);
+
+        // Remove null values from selectedUsernames array
+        $selectedUsernamesId = array_filter($selectedUsernamesId);
+    
+        // Validate the creation of the filter for the current user
         list($valid, $errors) = $this->customGlobalFilterValidator->validateCreation($values);
-
+    
         if ($valid) {
-            if ($this->customGlobalFilterModel->create($values) !== false) {
+            $createSuccess = $this->customGlobalFilterModel->create($values) !== false;
+    
+            if ($createSuccess) {
+                // Loop through each selected user ID and create the filter for each
+                foreach ($selectedUsernamesId as $selectedUserId) {
+                    if ($selectedUserId != $currentUserId) {
+                        $values['user_id'] = $selectedUserId;
+                        $this->customGlobalFilterModel->create($values);
+                    }
+                }
+
+                foreach ($selectedGroupsId as $selectedGroupId) {
+                    $groupMembers = $this->groupMemberModel->getMembers($selectedGroupId);
+                    foreach ($groupMembers as $member) {
+                        $memberUserId = $member['id'];
+                        if ($memberUserId != $currentUserId) {
+                            $values['user_id'] = $memberUserId;
+                            $this->customGlobalFilterModel->create($values);
+                        }
+                    }
+                }
+    
                 $this->flash->success(t('Your custom filter has been created successfully.'));
-                $this->response->redirect($this->helper->url->to('DashboardController', 'show'));
+                $this->response->redirect($this->helper->url->to('CustomGlobalFilterController', 'index'), true);
                 return;
             } else {
                 $this->flash->failure(t('Unable to create your custom filter.'));
             }
         }
-
+    
         $this->create($values, $errors);
     }
 
@@ -128,10 +166,11 @@ class CustomGlobalFilterController extends BaseController
      */
     public function update()
     {
-        $filter = $this->customGlobalFilterModel->getById($this->request->getIntegerParam('filter_id'));
+        $filterId = $this->request->getIntegerParam('filter_id');
+        $filter = $this->customGlobalFilterModel->getById($filterId);
 
         $values = $this->request->getValues();
-        $values['id'] = $filter['id'];
+        $values['id'] = $filterId;
 
         if (! isset($values['is_shared'])) {
             $values += array('is_shared' => 0);
@@ -141,10 +180,25 @@ class CustomGlobalFilterController extends BaseController
             $values += array('append' => 0);
         }
 
+        // Retrieve selected user IDs from the form values
+        $selectedUsernamesId = isset($values['users']) ? $values['users'] : [];
+        if (isset($values['users'])) {
+            unset($values['users']);
+        }
+
+        // Retrieve selected group IDs from the form values
+        $selectedGroupsId = isset($values['groups']) ? $values['groups'] : [];
+        if (isset($values['groups'])) {
+            unset($values['groups']);
+        }
+
         list($valid, $errors) = $this->customGlobalFilterValidator->validateModification($values);
 
         if ($valid) {
             if ($this->customGlobalFilterModel->update($values)) {
+                // Save the filter for selected users
+                $this->saveForSelectedUsersAndGroups($values, $selectedUsernamesId, $selectedGroupsId);
+
                 $this->flash->success(t('Your custom filter has been updated successfully.'));
                 $this->response->redirect($this->helper->url->to('CustomGlobalFilterController', 'index'), true);
                 return;
@@ -155,4 +209,48 @@ class CustomGlobalFilterController extends BaseController
 
         $this->edit($values, $errors);
     }
+
+    /**
+     * Save the custom filter for all selected users and groups
+     *
+     * @access private
+     * @param array $values            Form values (including filter details)
+     * @param array $selectedUserIds   Array of selected user IDs
+     * @param array $selectedGroupIds  Array of selected group IDs
+     * @return void
+     */
+    private function saveForSelectedUsersAndGroups(array $values, array $selectedUserIds, array $selectedGroupIds)
+    {
+        $currentUserId = $this->userSession->getId();
+        
+        $selectedUserIds = array_filter($selectedUserIds);
+        $selectedGroupIds = array_filter($selectedGroupIds);
+        
+        // Retrieve users for each selected group
+        foreach ($selectedGroupIds as $groupId) {
+            $groupMembers = $this->groupMemberModel->getMembers($groupId);
+            foreach ($groupMembers as $member) {
+                $selectedUserIds[] = $member['id'];
+            }
+        }
+
+        // Ensure unique user IDs
+        $selectedUserIds = array_unique($selectedUserIds);
+
+        // Unset values that shouldn't be duplicated
+        unset($values['id']);
+        unset($values['is_shared']);
+        unset($values['append']);
+
+        // Create filter for each user
+        foreach ($selectedUserIds as $selectedUserId) {
+            if ($selectedUserId != $currentUserId) {
+                $userValues = $values; // Create a copy of $values for each user
+                $userValues['user_id'] = $selectedUserId;
+                $this->customGlobalFilterModel->create($userValues);
+            }
+        }
+    }
+
+
 }

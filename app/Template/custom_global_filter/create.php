@@ -10,8 +10,11 @@
     <?= $this->form->label(t('Filter'), 'filter') ?>
     <?= $this->form->text('filter', $values, $errors, array('required')) ?>
 
-    <?= $this->form->checkbox('is_shared', t('Share with all project members'), 1) ?>
     <?= $this->form->checkbox('append', t('Append filter (instead of replacement)'), 1) ?>
 
+    <?= $this->form->renderFilterUserField() ?>
+    
+    <?= $this->form->renderFilterGroupField() ?>
+    
     <?= $this->modal->submitButtons() ?>
 </form>

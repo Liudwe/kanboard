@@ -84,6 +84,19 @@ class GroupModel extends Base
     }
 
     /**
+     * Get all groups
+     *
+     * @param  integer $current_user_id Current User Id
+     * @return array
+     */
+    public function getAssignableGroups()
+    {
+        return $this->db->hashtable(self::TABLE)
+            ->asc('name')
+            ->getAll('id', 'name');
+    }
+
+    /**
      * Search groups by name
      *
      * @access public

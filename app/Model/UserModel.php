@@ -196,6 +196,20 @@ class UserModel extends Base
     }
 
     /**
+     * Get all users except the current user
+     *
+     * @param  integer $current_user_id Current User Id
+     * @return array
+     */
+    public function getAssignableUsers($current_user_id)
+    {
+        return $this->db->hashtable(self::TABLE)
+            ->neq('id', $current_user_id)
+            ->asc('username')
+            ->getAll('id', 'username');
+    }
+
+    /**
      * Get the number of users
      *
      * @access public
